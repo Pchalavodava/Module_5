@@ -95,7 +95,7 @@ def convert_to_csv(file: str, new_file: str) -> None:
         writer.writerows(goods_list)
 
 
-convert_to_csv('prices_1.txt', 'prices_1.csv')
+convert_to_csv('prices.txt', 'prices.csv')
 
 """
 Exercise_2
@@ -142,5 +142,5 @@ def get_total_price(file: str) -> int:
     return total_price
 
 
-total = get_total_price('prices_1.csv')
+total = get_total_price('prices.csv')
 print(f'Общая стоимость заказа составляет {total} рублей')
