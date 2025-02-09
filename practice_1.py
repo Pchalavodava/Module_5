@@ -12,6 +12,12 @@ def read_csv(csv_file):
     return reader
 
 
+def read_json(json_file):
+    file = open(json_file, 'r', encoding='utf-8')
+    list_from_json: list[dict[str, Union[str, int]]] = json.load(file)
+    return list_from_json
+
+
 """Задание 1: Работа с JSON файлом
 Задача:
 Студентам предлагается JSON файл с данными о студентах. Необходимо создать программу, которая проведет
@@ -29,9 +35,10 @@ def get_list_from_json(file: str) -> list[dict[str, Union[str, int]]]:
     :param file: str: Файл json для обработки
     :return: list[dict[str, str | int]]: Список словарей (студентов)
     """
-    with open(file, 'r', encoding='utf-8') as json_file:
-        list_from_json: list[dict[str, Union[str, int]]] = json.load(json_file)
-        return list_from_json
+    # with open(file, 'r', encoding='utf-8') as json_file:
+    #     list_from_json: list[dict[str, Union[str, int]]] = json.load(json_file)
+    list_from_json = read_json(file)
+    return list_from_json
 
 
 def get_numbers_of_students(students: list[dict[str, Union[str, int]]]) -> int:
@@ -201,8 +208,9 @@ def get_employees_list(json_file: str) -> list[dict[str, Union[str, int]]]:
     :param json_file: str: json-файл для обработки
     :return: list[dict[str, str | int]]
     """
-    with open(json_file, 'r', encoding='utf-8') as file:
-        data: list[dict[str, Union[str, int]]] = json.load(file)
+    # with open(json_file, 'r', encoding='utf-8') as file:
+    #     data: list[dict[str, Union[str, int]]] = json.load(file)
+    data = read_json(json_file)
     return data
 
 
