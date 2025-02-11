@@ -7,15 +7,16 @@ from cprint import cprint
 
 
 def read_csv(csv_file):
-    file = open(csv_file, 'r', encoding='utf-8')
-    reader = csv.reader(file)
-    return reader
+    with open(csv_file, 'r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        list_from_csv = list(map(lambda y: list(map(lambda x: x.strip(), y)), reader))
+        return list_from_csv
 
 
 def read_json(json_file):
-    file = open(json_file, 'r', encoding='utf-8')
-    list_from_json: list[dict[str, Union[str, int]]] = json.load(file)
-    return list_from_json
+    with open(json_file, 'r', encoding='utf-8') as file:
+        list_from_json: list[dict[str, Union[str, int]]] = json.load(file)
+        return list_from_json
 
 
 """Задание 1: Работа с JSON файлом
@@ -27,18 +28,6 @@ def read_json(json_file):
 Определить общее количество студентов в файле.
 Найти студента с самым высоким возрастом и вывести его данные (имя, возраст, город).
 Определить количество студентов, изучающих определенный предмет (например, Python)."""
-
-
-def get_list_from_json(file: str) -> list[dict[str, Union[str, int]]]:
-    """
-    Конвертация файла json в объект Python (список)
-    :param file: str: Файл json для обработки
-    :return: list[dict[str, str | int]]: Список словарей (студентов)
-    """
-    # with open(file, 'r', encoding='utf-8') as json_file:
-    #     list_from_json: list[dict[str, Union[str, int]]] = json.load(json_file)
-    list_from_json = read_json(file)
-    return list_from_json
 
 
 def get_numbers_of_students(students: list[dict[str, Union[str, int]]]) -> int:
@@ -57,7 +46,8 @@ def get_max_age_student(students: list[dict[str, Union[str, int]]]) -> tuple[str
     :return: tuple[str, int, str]: Кортеж из имени, возраста и города старшего студента
     """
     max_age: int = max(student.get('возраст') for student in students)
-    older_student: list[dict[str, Union[str, int]]] = [student for student in students if student.get('возраст') == max_age]
+    older_student: list[dict[str, Union[str, int]]] = [student for student in students if
+                                                       student.get('возраст') == max_age]
     for max_age_student in older_student:
         return max_age_student.get('имя'), max_age_student.get('возраст'), max_age_student.get('город')
 
@@ -86,7 +76,7 @@ def file_analysis(file: str) -> None:
     :param file: str: json-файл для обработки
     :return: None
     """
-    list_of_students: list[dict[str, Union[str, int]]] = get_list_from_json(file)
+    list_of_students: list[dict[str, Union[str, int]]] = read_json(file)
     total_students: int = get_numbers_of_students(list_of_students)
     older_student: tuple[str, int, str] = get_max_age_student(list_of_students)
     students_by_disciplines: dict[str, int] = get_students_by_discipline(list_of_students)
@@ -116,10 +106,7 @@ def get_goods_list(csv_file: str) -> list[dict[str, Union[str, int]]]:
     :return: list[dict[str, str | int]]: Список словарей (товаров)
     """
     goods_list: list[dict[str, Union[str, int]]] = []
-    # with open(csv_file, 'r', encoding='utf-8') as file:
-    #     reader = csv.reader(file)
     reader = read_csv(csv_file)
-    reader = list(map(lambda y: list(map(lambda x: x.strip(), y)), reader))
     i: int = 1
     while i < len(reader):
         goods_list.append(dict(zip(reader[0], reader[i])))
@@ -202,18 +189,6 @@ file_analysis('sales.csv')
 Найти сотрудника с наивысшей производительностью и вывести его имя и показатель производительности."""
 
 
-def get_employees_list(json_file: str) -> list[dict[str, Union[str, int]]]:
-    """
-    Конвертация файла json в список сотрудников
-    :param json_file: str: json-файл для обработки
-    :return: list[dict[str, str | int]]
-    """
-    # with open(json_file, 'r', encoding='utf-8') as file:
-    #     data: list[dict[str, Union[str, int]]] = json.load(file)
-    data = read_json(json_file)
-    return data
-
-
 def get_performance_list(csv_file: str) -> list[dict[str, Union[str, int]]]:
     """
     Получение списка производительностей по каждому сотруднику
@@ -221,10 +196,7 @@ def get_performance_list(csv_file: str) -> list[dict[str, Union[str, int]]]:
     :return: list[dict[str, str | dict]]
     """
     performance_lists: list[dict[str, Union[str, int]]] = []
-    # with open(csv_file, 'r', encoding='utf-8') as file:
-    #     reader = csv.reader(file)
     reader = read_csv(csv_file)
-    reader = list(map(lambda y: list(map(lambda x: x.strip(), y)), reader))
     i = 1
     while i < len(reader):
         performance_lists.append(dict(zip(reader[0], reader[i])))
@@ -270,7 +242,7 @@ def get_max_performance(employees: list[dict[str, Union[str, int]]]) -> tuple[st
     """
     max_performance: int = max(employee.get('производительность') for employee in employees)
     the_best_employee: list[dict[str, Union[str, int]]] = [employee for employee in employees if
-                                                     employee['производительность'] == max_performance]
+                                                           employee['производительность'] == max_performance]
     for name in the_best_employee:
         return name.get('имя'), name.get('производительность')
 
@@ -282,7 +254,7 @@ def performance_analysis(json_file: str, csv_file: str) -> None:
     :param csv_file: Входящий csv-файл со списком производительностей сотрудников
     :return: None
     """
-    employees: list[dict[str, Union[str, int]]] = get_employees_list(json_file)
+    employees: list[dict[str, Union[str, int]]] = read_json(json_file)
     performance: list[dict[str, Union[str, int]]] = get_performance_list(csv_file)
     employees_performance: list[dict[str, Union[str, int]]] = get_employees_performance(employees, performance)
     average_performance: float = get_average_performance(employees_performance)
@@ -293,5 +265,3 @@ def performance_analysis(json_file: str, csv_file: str) -> None:
 
 
 performance_analysis('employees.json', 'performance.csv')
-
-
