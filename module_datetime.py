@@ -40,10 +40,10 @@ def is_year_leap(date: datetime) -> bool:
     :return:
     """
     year: int = date.year
-    return int(year) % 4 == 0
+    return int(year) % 400 == 0 or (int(year) % 4 == 0 and int(year) % 100 != 0)
 
 
-def run() -> None:
+def output_of_result_checking_of_the_current_date() -> None:
     """
     Вывод информации о текущей дате с получением названия дня недели и проверки, является ли год високосным
     :return: None
@@ -56,7 +56,7 @@ def run() -> None:
           f'Является ли нынешний год високосным? {'Да' if leap_year else 'Нет'}')
 
 
-run()
+output_of_result_checking_of_the_current_date()
 
 """Часть 2: Работа с пользовательской датой
 
@@ -72,10 +72,8 @@ def create_date(date: str) -> datetime:
     :param date: str: Текстовое представление даты, введенной пользователем
     :return: datetime: Объект datetime
     """
-    date_string: list[str] = date.split('-')
-    date_int: list[int] = list(map(lambda x: int(x), date_string))
-    date = datetime.datetime(date_int[0], date_int[1], date_int[2],0,0)
-    return date
+    date_string = datetime.datetime.strptime(date, '%Y-%m-%d')
+    return date_string
 
 
 def calculation_days_difference(date: datetime) -> tuple[int, int, int]:
@@ -96,7 +94,7 @@ def calculation_days_difference(date: datetime) -> tuple[int, int, int]:
     return days_difference, times_difference_hours, times_difference_minutes
 
 
-def run() -> None:
+def output_of_calculation_difference_date() -> None:
     """
     Вывод результата вычислений разницы в датах
     :return: None
@@ -112,4 +110,4 @@ def run() -> None:
         print('Неверные формат даты')
 
 
-run()
+output_of_calculation_difference_date()
