@@ -4,18 +4,18 @@
 Получите текущую дату и время.
 Выведите на экран день недели для этой даты.
 Определите, является ли год текущей даты високосным, и выведите соответствующее сообщение."""
-import datetime
+import datetime as dt
 
 
-def get_currant_date() -> datetime:
+def get_currant_date() -> dt.datetime:
     """
     Получение текущей даты и времени
     :return: datetime: Текущие дата и время
     """
-    return datetime.datetime.now()
+    return dt.datetime.now()
 
 
-def get_week_day(date: datetime) -> str:
+def get_week_day(date: dt.datetime) -> str:
     """
     Получение строкового представления дня недели
     :param date: datetime: Дата и время для определения дня недели
@@ -33,7 +33,7 @@ def get_week_day(date: datetime) -> str:
     return week_day
 
 
-def is_year_leap(date: datetime) -> bool:
+def is_year_leap(date: dt.datetime) -> bool:
     """
     Поверка является ли выбранный год високосным
     :param date: datetime: Дата для проверки на то, является
@@ -48,7 +48,7 @@ def output_of_result_checking_of_the_current_date() -> None:
     Вывод информации о текущей дате с получением названия дня недели и проверки, является ли год високосным
     :return: None
     """
-    currant_date: datetime = get_currant_date()
+    currant_date: dt.datetime = get_currant_date()
     week_day: str = get_week_day(currant_date)
     leap_year: bool = is_year_leap(currant_date)
     print(f'Текущая дата {currant_date}\n'
@@ -66,28 +66,28 @@ output_of_result_checking_of_the_current_date()
 """
 
 
-def create_date(date: str) -> datetime:
+def create_date(date: str) -> dt.datetime:
     """
     Формирование объекта datetime из строки
     :param date: str: Текстовое представление даты, введенной пользователем
     :return: datetime: Объект datetime
     """
-    date_string = datetime.datetime.strptime(date, '%Y-%m-%d')
+    date_string = dt.datetime.strptime(date, '%Y-%m-%d')
     return date_string
 
 
-def calculation_days_difference(date: datetime) -> tuple[int, int, int]:
+def calculation_days_difference(date: dt.datetime) -> tuple[int, int, int]:
     """
     Расчет разницы в днях, часах и минутах
-    :param date: datetime: введенная и преобразованная, в объект datetime, пользователем дата
+    :param date: dt.datetime: введенная и преобразованная, в объект datetime, пользователем дата
     :return: tuple[int, int, int]: Кортеж из количества дней, часов и минут
     """
-    current_date: datetime = datetime.datetime.now()
+    current_date: dt.datetime = dt.datetime.now()
 
     if current_date > date:
-        difference: datetime = current_date - date
+        difference: tuple[int, int, int] = current_date - date
     else:
-        difference: datetime = date - current_date
+        difference: tuple[int, int, int] = date - current_date
     days_difference: int = difference.days
     times_difference_hours: int = difference.seconds // 3600
     times_difference_minutes: int = difference.seconds // 60 - times_difference_hours * 60
@@ -101,8 +101,8 @@ def output_of_calculation_difference_date() -> None:
     """
     user_date: str = input('Введите дату в формате ГГГГ-ММ-ДД >>> ').strip()
     try:
-        date: datetime = create_date(user_date)
-        dates_difference: datetime = calculation_days_difference(date)
+        date: dt.datetime = create_date(user_date)
+        dates_difference: tuple[int, int, int] = calculation_days_difference(date)
         print(f'Введенная пользователем дата - {date}\n'
               f'Разница между датой пользователя и нынешней датой - {dates_difference[0]} дней, '
               f'{dates_difference[1]} часов и {dates_difference[2]} минут')
