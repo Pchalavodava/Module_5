@@ -15,21 +15,24 @@ message_dict: dict[str, str] = {
 }
 
 
-def create_keyboard(button_name: str) -> types.ReplyKeyboardMarkup:
+def create_keyboard(button_names: str | list[str]) -> types.ReplyKeyboardMarkup:
     """
     Конструктор для создания клавиатуры
-    :param button_name: str: Название клавиши
+    :param button_names: list[str]: Название клавиш
     :return: ReplyKeyboardMarkup: Клавиатура с заданным названием клавиши
     """
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    button = types.KeyboardButton(button_name)
-    keyboard.add(button)
+    if isinstance(button_names, str):
+        button_names = [button_names]
+    for button_name in button_names:
+        button = types.KeyboardButton(button_name)
+        keyboard.add(button)
     return keyboard
 
 
-def write_to_csv(csv_file: str, data: list[str | int]) -> None:
+def append_to_csv(csv_file: str, data: list[str | int]) -> None:
     """
-    Запись данных в csv-файл
+    Добавление данных в csv-файл
     :param csv_file: str: Файл для записи
     :param data: str: Данные для записи в файл
     :return: None
@@ -66,7 +69,7 @@ def press_wakeup_sleep_buttons(message: str, user_id: int, chat_id: int, file_cs
     """
     time = str(dt.now())[:19]  # Здесь обрезаю миллисекунды. Не знаю, как иначе можно это сделать
     line_to_write: list[int | str] = [user_id, message, time]
-    write_to_csv(file_csv, line_to_write)
+    append_to_csv(file_csv, line_to_write)
     keyboard = create_keyboard(button_text)
     bot.send_message(chat_id, warning_message, reply_markup=keyboard)
 
@@ -140,11 +143,11 @@ def handle_message(message) -> None:
         warning_message = 'Не забудь предупредить, когда проснешься'
         press_wakeup_sleep_buttons(message.text, message.from_user.id, message.chat.id, csv_file,
                                    warning_message, message_dict['wake_up'])
-    if message.text == message_dict['wake_up']:
+    elif message.text == message_dict['wake_up']:
         warning_message = 'Хочешь узнать время своего сна?'
         press_wakeup_sleep_buttons(message.text, message.from_user.id, message.chat.id, csv_file,
                                    warning_message, message_dict['statistic'])
-    if message.text == message_dict['statistic']:
+    elif message.text == message_dict['statistic']:
         calculate_sleep_time(message.from_user.id, message.chat.id, csv_file)
         warning_message = 'Скажи, когда будешь ложиться спать'
         keyboard = create_keyboard(message_dict['go_to_sleep'])
